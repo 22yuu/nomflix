@@ -1,4 +1,4 @@
 function Home() {
-  return <div style={{ backgroundColor: "white", height: "200vh" }}>Home</div>;
+  return <div style={{ backgroundColor: "white", height: "200vh" }}></div>;
 }
 export default Home;
