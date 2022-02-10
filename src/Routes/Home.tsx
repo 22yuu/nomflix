@@ -57,6 +57,12 @@ const Box = styled(motion.div)<{ bgPhoto: string }>`
   background-position: center center;
   height: 200px;
   font-size: 66px;
+  &:first-child {
+    transform-origin: center left;
+  }
+  &:last-child {
+    transform-origin: center right;
+  }
 `;
 
 const rowVariants = {
@@ -73,6 +79,16 @@ const rowVariants = {
 
 const offset = 6;
 
+const boxVariants = {
+  normal: {
+    scale: 1,
+  },
+  hover: {
+    scale: 1.2,
+    y: -50,
+    transition: { delay: 0.3, duration: 0.3, type: "tween" },
+  },
+};
 function Home() {
   const { data, isLoading } = useQuery<IGetMoviesResult>(
     ["movies", "now_playing"],
@@ -91,7 +107,6 @@ function Home() {
   };
 
   const toggleLeaving = () => setLeaving((prev) => !prev);
-  console.log(data, isLoading);
 
   return (
     <Wrapper>
@@ -122,6 +137,10 @@ function Home() {
                   .map((movie) => (
                     <Box
                       key={movie.id}
+                      variants={boxVariants}
+                      whileHover="hover"
+                      initial="normal"
+                      transition={{ type: "tween" }}
                       bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
                     />
                   ))}
