@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import styled from "styled-components";
 import { makeImagePath } from "../utils";
 import { useState } from "react";
+import { moveEmitHelpers } from "typescript";
 
 const Wrapper = styled.div`
   background: black;
@@ -65,6 +66,20 @@ const Box = styled(motion.div)<{ bgPhoto: string }>`
   }
 `;
 
+const Info = styled(motion.div)`
+  padding: 10px;
+  background-color: ${(props) => props.theme.black.lighter};
+  opacity: 0;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+
+  h4 {
+    text-align: center;
+    font-size: 18px;
+  }
+`;
+
 const rowVariants = {
   hidden: {
     x: window.outerWidth,
@@ -89,6 +104,14 @@ const boxVariants = {
     transition: { delay: 0.3, duration: 0.3, type: "tween" },
   },
 };
+
+const infoVariants = {
+  hover: {
+    opacity: 1,
+    transition: { delay: 0.3, duration: 0.3, type: "tween" },
+  },
+};
+
 function Home() {
   const { data, isLoading } = useQuery<IGetMoviesResult>(
     ["movies", "now_playing"],
@@ -142,7 +165,18 @@ function Home() {
                       initial="normal"
                       transition={{ type: "tween" }}
                       bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
-                    />
+                    >
+                      {/* 부모에게 부여된 모션 속성들은 자동적으로 자식에게도 똑같이 상속되어 적용된다. 
+                          따라서 자식 속성에 별도로 다른 모션을 주고 싶으면 자식 요소에 variants를 만들어서 적용시켜준다.
+                          ! 부모와 자식의 variants의 key 이름이 같으면 똑같은 기능을 한다.
+                          이 소스에서 부모 요소인 Box 컴포넌트에 whileHover="hover"가 자식 요소 infoVariants hover와 매핑되어
+                          자식 요소에서는 infoVariants의 hover가 whileHover 속성으로 작동된다.
+                      */}
+                      <img />
+                      <Info variants={infoVariants}>
+                        <h4>{movie.title}</h4>
+                      </Info>
+                    </Box>
                   ))}
               </Row>
             </AnimatePresence>
